@@ -1,0 +1,25 @@
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 600
+FPS = 60
+
+# Carts
+CART_WIDTH = 80
+CART_HEIGHT = 40
+CART_MASS_MIN = 1.0
+CART_MASS_MAX = 10.0
+
+# Physics
+FRICTION_COEFFICIENT = 0.02          # tiny friction for realism
+GRAVITY = 9.81
+
+# Colours
+WHITE   = (255, 255, 255)
+BLACK   = (0, 0, 0)
+RED     = (220, 50, 50)
+BLUE    = (50, 50, 220)
+GREEN   = (50, 200, 50)
+GRAY    = (180, 180, 180)
+
+# UI
+FONT_NAME = None
+FONT_SIZE = 28
