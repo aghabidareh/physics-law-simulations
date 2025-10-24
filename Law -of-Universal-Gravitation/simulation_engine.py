@@ -1,10 +1,13 @@
 import asyncio
-import pygame
-from config import SCREEN_WIDTH, SCREEN_HEIGHT, FPS
-from physics_bodies import Body, gravitational_force
-from renderer import Renderer
-from input_handler import InputHandler
+
 import numpy as np
+import pygame
+
+from config import SCREEN_WIDTH, SCREEN_HEIGHT, FPS
+from input_handler import InputHandler
+from physics_bodies import gravitational_force
+from renderer import Renderer
+
 
 class SimulationEngine:
     def __init__(self):
@@ -23,19 +26,19 @@ class SimulationEngine:
 
     # ------------------------------------------------------------------
     def _create_default_scene(self):
+        self.bodies.clear()
         from physics_bodies import Body
         from config import SUN_COLOR, PLANET_COLOR
         sun = Body(400, 300, mass=1e5, colour=SUN_COLOR, fixed=True)
         self.bodies.append(sun)
 
-        # three orbiting planets
         for angle in [0, 120, 240]:
             theta = np.radians(angle)
             r = 180
             x = 400 + r * np.cos(theta)
             y = 300 + r * np.sin(theta)
             vx = -8 * np.sin(theta)
-            vy =  8 * np.cos(theta)
+            vy = 8 * np.cos(theta)
             p = Body(x, y, mass=3e3, colour=PLANET_COLOR)
             p.set_velocity(vx, vy)
             self.bodies.append(p)
@@ -58,7 +61,7 @@ class SimulationEngine:
 
         # 2. Accumulate gravitational forces (N-body, O(n²))
         for i, b1 in enumerate(self.bodies):
-            for b2 in self.bodies[i+1:]:
+            for b2 in self.bodies[i + 1:]:
                 f1, f2 = gravitational_force(b1, b2)
                 b1.apply_force(f1)
                 b2.apply_force(f2)

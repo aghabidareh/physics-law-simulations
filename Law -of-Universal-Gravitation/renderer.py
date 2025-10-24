@@ -1,6 +1,7 @@
-import pygame
 import numpy as np
-from config import WHITE, BLACK, FORCE_COLOR, FONT_NAME, FONT_SIZE, GRAVITY_SCALE
+import pygame
+
+from config import FORCE_COLOR, FONT_NAME, FONT_SIZE, GRAVITY_SCALE
 
 
 class Renderer:
@@ -62,12 +63,16 @@ class Renderer:
             "",
             "Left-click + drag → move body",
             "Right-click → add planet",
-            "+ / – → change mass of selected body",
-            "R → reset scene, C → clear planets",
+            "+ / – → change mass of SELECTED body",
+            "ESC → deselect | R → reset | C → clear planets",
             "",
         ]
         if selected:
-            lines.append(f"SELECTED: m = {selected.mass:.0f} kg")
+            r = np.linalg.norm(selected.position - np.array([400, 300])) if len(bodies) > 1 else 0
+            lines.append(f"SELECTED: m = {selected.mass:.0f} kg | r = {r:.0f} px")
+        else:
+            lines.append("No body selected")
+
         for i, txt in enumerate(lines):
             col = (255, 200, 0) if i == 0 else (220, 220, 220)
             surf = self.font.render(txt, True, col)

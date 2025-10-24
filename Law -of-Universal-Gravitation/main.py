@@ -1,6 +1,8 @@
 import asyncio
 import platform
+
 from simulation_engine import SimulationEngine
+
 
 async def main():
     engine = SimulationEngine()
@@ -8,6 +10,7 @@ async def main():
         await engine.run()
     finally:
         engine.cleanup()
+
 
 if __name__ == "__main__":
     if platform.system() == "Emscripten":

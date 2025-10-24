@@ -1,6 +1,7 @@
 import numpy as np
 from config import G, GRAVITY_SCALE, BODY_RADIUS_MIN, BODY_RADIUS_MAX, MASS_MIN, MASS_MAX
 
+
 class Body:
     def __init__(self, x, y, mass, colour, fixed=False):
         self.fixed = fixed
