@@ -15,13 +15,11 @@ class SimulationEngine:
         self.clock = pygame.time.Clock()
         self.running = True
 
-        # Initialize components
         self.ball = PhysicsBall(self.width, self.height)
         self.renderer = Renderer(self.screen, self.width, self.height)
         self.input_handler = InputHandler(self.ball)
 
     async def run(self):
-        """Main game loop"""
         while self.running:
             self.handle_events()
             self.update()
@@ -29,18 +27,15 @@ class SimulationEngine:
             await asyncio.sleep(1.0 / self.fps)
 
     def handle_events(self):
-        """Process all events"""
         self.running = self.input_handler.process_events()
 
     def update(self):
-        """Update simulation state"""
-        self.ball.update()
+        dt = 1.0 / self.fps
+        self.ball.update(dt)
 
     def render(self):
-        """Render the current frame"""
         self.renderer.render(self.ball)
         self.clock.tick(self.fps)
 
     def cleanup(self):
-        """Clean up resources"""
         pygame.quit()

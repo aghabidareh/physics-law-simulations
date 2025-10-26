@@ -23,9 +23,14 @@ class Renderer:
         pygame.draw.circle(self.screen, color, ball.position.astype(int), ball.radius)
 
     def draw_ui(self, ball):
+        velocity_magnitude = (ball.velocity[0]**2 + ball.velocity[1]**2) ** 0.5
+        kinetic_energy = ball.get_kinetic_energy()
+
         instructions = [
             "Press SPACE to toggle friction, R to reset with random velocity, S to stop",
-            f"Friction: {'ON' if ball.friction_enabled else 'OFF'}"
+            f"Friction: {'ON' if ball.friction_enabled else 'OFF'}",
+            f"Velocity: {velocity_magnitude:.2f} m/s",
+            f"Kinetic Energy: {kinetic_energy:.2f} J"
         ]
 
         for i, text in enumerate(instructions):

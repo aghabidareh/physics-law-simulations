@@ -34,22 +34,25 @@ class SimulationEngine:
 
     # ------------------------------------------------------------------
     def _step(self):
-        # friction
         self.c1.apply_friction(self.dt)
         self.c2.apply_friction(self.dt)
 
-        # collision detection
-        dist = abs(self.c1.position[0] - self.c2.position[0])
-        if dist < self.c1.radius + self.c2.radius:
+        distance = abs(self.c1.position[0] - self.c2.position[0])
+        min_distance = self.c1.radius + self.c2.radius
+
+        if distance < min_distance:
             if self.collision_type == "elastic":
                 Cart.elastic_collision(self.c1, self.c2)
             else:
                 Cart.inelastic_collision(self.c1, self.c2)
 
-        # integrate
+            overlap = min_distance - distance
+            direction = 1 if self.c2.position[0] > self.c1.position[0] else -1
+            self.c1.position[0] -= direction * overlap * 0.5
+            self.c2.position[0] += direction * overlap * 0.5
+
         self.c1.update(self.dt)
         self.c2.update(self.dt)
 
-    # ------------------------------------------------------------------
     def cleanup(self):
         pygame.quit()

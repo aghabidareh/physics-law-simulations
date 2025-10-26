@@ -36,8 +36,10 @@ class SimulationEngine:
         self.running = self.input_handler.process_events()
 
     def update(self):
-        self.cart1.update(self.dt, self.cart2)
-        self.cart2.update(self.dt, self.cart1)
+        self.cart1.update(self.dt)
+        self.cart2.update(self.dt)
+
+        PhysicsCart.handle_collision(self.cart1, self.cart2, self.dt)
 
     def render(self):
         self.renderer.render(self.cart1, self.cart2)

@@ -13,7 +13,6 @@ class Body:
         self.radius = self._radius_from_mass()
 
     def _radius_from_mass(self):
-        # Visual radius grows with log(mass)
         log_m = np.log10(self.mass)
         log_min, log_max = np.log10(MASS_MIN), np.log10(MASS_MAX)
         t = (log_m - log_min) / (log_max - log_min)
@@ -28,8 +27,9 @@ class Body:
     def update(self, dt):
         if self.fixed:
             return
-        acc = self.force / self.mass
-        self.velocity += acc * dt
+
+        acceleration = self.force / self.mass
+        self.velocity += acceleration * dt
         self.position += self.velocity * dt
 
     def set_mass(self, m):
@@ -43,22 +43,48 @@ class Body:
     def set_velocity(self, vx, vy):
         self.velocity[:] = vx, vy
 
+    def get_kinetic_energy(self):
+        vel_squared = np.dot(self.velocity, self.velocity)
+        return 0.5 * self.mass * vel_squared
+
+    def get_momentum(self):
+        return self.mass * self.velocity
+
 
 def gravitational_force(b1: Body, b2: Body):
-    """Return (force on b1, force on b2) – equal magnitude, opposite direction."""
     r_vec = b2.position - b1.position
-    r2 = np.dot(r_vec, r_vec)
+    r_squared = np.dot(r_vec, r_vec)
 
-    if r2 == 0:
-        return np.zeros(2), np.zeros(2)
+    if r_squared < 1e-10:
+        return np.zeros(2, dtype=np.float64), np.zeros(2, dtype=np.float64)
 
-    # Avoid division by zero / tiny distances
-    r = np.sqrt(r2)
-    if r < b1.radius + b2.radius:
-        r = b1.radius + b2.radius
+    r = np.sqrt(r_squared)
 
-    F = G * b1.mass * b2.mass / (r * r) * GRAVITY_SCALE
+    min_distance = b1.radius + b2.radius
+    if r < min_distance:
+        r = min_distance
+        r_squared = r * r
+
+    force_magnitude = (G * b1.mass * b2.mass / r_squared) * GRAVITY_SCALE
+
     direction = r_vec / r
-    f1 = F * direction
-    f2 = -f1
-    return f1, f2
+
+    force_on_b1 = force_magnitude * direction
+    force_on_b2 = -force_on_b1
+
+    return force_on_b1, force_on_b2
+
+
+def calculate_system_energy(bodies):
+    kinetic_energy = sum(body.get_kinetic_energy() for body in bodies)
+
+    potential_energy = 0.0
+    n = len(bodies)
+    for i in range(n):
+        for j in range(i + 1, n):
+            r_vec = bodies[j].position - bodies[i].position
+            r = np.linalg.norm(r_vec)
+            if r > 1e-10:
+                potential_energy -= (G * bodies[i].mass * bodies[j].mass / r) * GRAVITY_SCALE
+
+    return kinetic_energy, potential_energy, kinetic_energy + potential_energy

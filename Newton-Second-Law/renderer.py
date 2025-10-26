@@ -57,6 +57,8 @@ class Renderer:
         pygame.draw.polygon(self.screen, color, [end, p1, p2])
 
     def draw_ui(self, cart):
+        kinetic_energy = cart.get_kinetic_energy()
+
         lines = [
             "Newton's Second Law: F = ma",
             "",
@@ -64,6 +66,7 @@ class Renderer:
             f"Mass: {cart.mass:.1f} kg  (↑ ↓ to change)",
             f"Acceleration: {cart.get_acceleration():+.2f} m/s²",
             f"Velocity: {cart.velocity[0]:+.2f} m/s",
+            f"Kinetic Energy: {kinetic_energy:.2f} J",
             f"Friction: {'ON' if cart.friction_enabled else 'OFF'}  (SPACE to toggle)",
             "",
             "R: Reset  |  +/- : Fine-tune force"
