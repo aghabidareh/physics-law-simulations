@@ -24,13 +24,11 @@ class InputHandler:
             
             elif event.type == pygame.MOUSEBUTTONUP:
                 if self.dragging:
-                    # Give the pendulum a push based on mouse velocity
                     if self.mouse_pos:
                         mouse_current = pygame.mouse.get_pos()
                         dx = mouse_current[0] - self.mouse_pos[0]
                         dy = mouse_current[1] - self.mouse_pos[1]
                         impulse = np.sqrt(dx**2 + dy**2) * 0.1
-                        # Determine direction
                         if dx > 0:
                             self.pendulum.apply_impulse(impulse)
                         else:
@@ -42,7 +40,6 @@ class InputHandler:
             elif event.type == pygame.MOUSEMOTION and self.dragging:
                 pos = pygame.mouse.get_pos()
                 self.mouse_pos = pos
-                # Calculate angle from mouse position
                 dx = pos[0] - self.pendulum.pivot[0]
                 dy = pos[1] - self.pendulum.pivot[1]
                 angle = np.arctan2(dx, dy)

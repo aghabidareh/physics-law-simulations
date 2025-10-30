@@ -28,20 +28,16 @@ class ThermalBody:
         self.name = name
         self.color = color
         
-        # Thermal properties
         self.mass = MASS
         self.specific_heat = SPECIFIC_HEAT
         
-        # Entropy tracking
         self.S = self._calculate_entropy()
         self.initial_S = self.S
         
-        # Heat tracking
         self.Q_absorbed = 0.0  # Total heat absorbed (can be negative)
         
     def _calculate_entropy(self):
         """Calculate entropy using S = m*c*ln(T/T_ref)"""
-        # Using reference temperature to calculate absolute-like entropy
         if self.T > 0 and T_REFERENCE > 0:
             return self.mass * self.specific_heat * np.log(self.T / T_REFERENCE)
         return 0.0
@@ -50,14 +46,11 @@ class ThermalBody:
         """Add heat to the body (dQ can be negative for heat loss)"""
         self.Q_absorbed += dQ
         
-        # Calculate temperature change: dQ = m*c*dT
         dT = dQ / (self.mass * self.specific_heat)
         self.T += dT
         
-        # Clamp temperature
         self.T = np.clip(self.T, TEMP_MIN, TEMP_MAX)
         
-        # Update entropy
         self.S = self._calculate_entropy()
     
     def get_color(self):
@@ -65,7 +58,6 @@ class ThermalBody:
         temp_ratio = (self.T - TEMP_MIN) / (TEMP_MAX - TEMP_MIN)
         temp_ratio = np.clip(temp_ratio, 0, 1)
         
-        # Interpolate between blue (cold) and red (hot)
         r = int(50 + 200 * temp_ratio)
         g = int(50 + 100 * (1 - abs(temp_ratio - 0.5) * 2))
         b = int(220 - 170 * temp_ratio)
@@ -100,46 +92,34 @@ class HeatTransferSystem:
         self.heat_flow_rate = 0.0  # Current heat flow rate (J/s)
         self.total_entropy_generated = 0.0  # Total entropy generated
         
-        # Flow particles for visualization
         self.flow_particles = []
         self.particle_spawn_timer = 0.0
         self.particle_spawn_interval = 0.3  # seconds
         
-        # Initial state
         self.initial_total_entropy = body1.S + body2.S
     
     def update(self, dt):
         """Update heat transfer between bodies"""
-        # Calculate temperature difference
         T1 = self.body1.T
         T2 = self.body2.T
         dT = T1 - T2
         
-        # Heat flows from hot to cold
-        # Heat flow rate: Q_dot = k * (T_hot - T_cold)
         self.heat_flow_rate = self.k * dT
         
-        # Heat transferred in this time step
         dQ = self.heat_flow_rate * dt
         
-        # Transfer heat
         if abs(dQ) > 1e-6:  # Only if significant heat transfer
             self.body1.add_heat(-dQ)  # Body 1 loses heat
             self.body2.add_heat(dQ)   # Body 2 gains heat
             
-            # Calculate entropy generation
-            # dS_universe = dS1 + dS2 = -dQ/T1 + dQ/T2 = dQ*(1/T2 - 1/T1)
-            # For T1 > T2, this is always positive (entropy increases)
             if T1 > 0 and T2 > 0:
                 dS_universe = dQ * (1.0/T2 - 1.0/T1)
                 self.total_entropy_generated += dS_universe
         
-        # Update flow particles
         self._update_flow_particles(dt, dT)
     
     def _update_flow_particles(self, dt, dT):
         """Update heat flow visualization particles"""
-        # Spawn new particles if there's heat flow
         if abs(dT) > 1.0:  # Only if temperature difference is significant
             self.particle_spawn_timer += dt
             
@@ -147,7 +127,6 @@ class HeatTransferSystem:
                 self.particle_spawn_timer = 0.0
                 self._spawn_flow_particle(dT)
         
-        # Update existing particles
         for particle in self.flow_particles:
             if particle.active:
                 particle.progress += dt * 1.5  # Speed of particle movement
@@ -155,11 +134,9 @@ class HeatTransferSystem:
                 if particle.progress >= 1.0:
                     particle.active = False
                 else:
-                    # Interpolate position
                     particle.x = particle.target_x * particle.progress + (1 - particle.progress) * (self.body1.x + self.body1.width)
                     particle.y = particle.target_y * particle.progress + (1 - particle.progress) * (self.body1.y + self.body1.height // 2)
         
-        # Remove inactive particles
         self.flow_particles = [p for p in self.flow_particles if p.active]
     
     def _spawn_flow_particle(self, dT):
@@ -167,7 +144,6 @@ class HeatTransferSystem:
         if len(self.flow_particles) >= NUM_FLOW_PARTICLES:
             return
         
-        # Determine direction based on temperature difference
         if dT > 0:  # Heat flows from body1 to body2
             start_x = self.body1.x + self.body1.width
             start_y = self.body1.y + self.body1.height // 2 + np.random.randint(-20, 20)

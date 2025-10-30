@@ -14,7 +14,6 @@ class Renderer:
     def render(self, c1, c2, collision_type):
         self.screen.fill((240, 250, 255))
 
-        # ground
         ground_y = c1.ground_y
         pygame.draw.rect(self.screen, (160, 110, 60), (0, ground_y, self.w, self.h - ground_y))
         pygame.draw.line(self.screen, BLACK, (0, ground_y), (self.w, ground_y), 3)
@@ -25,25 +24,21 @@ class Renderer:
         self._draw_ui(collision_type)
         pygame.display.flip()
 
-    # ------------------------------------------------------------------
     def _draw_cart(self, c):
         rect = pygame.Rect(0, 0, CART_WIDTH, CART_HEIGHT)
         rect.center = c.position.astype(int)
         pygame.draw.rect(self.screen, c.colour, rect)
         pygame.draw.rect(self.screen, BLACK, rect, 3)
 
-        # wheels
         for off in [-28, 28]:
             wx = int(c.position[0] + off)
             wy = int(c.position[1] + 18)
             pygame.draw.circle(self.screen, (40, 40, 40), (wx, wy), 12)
             pygame.draw.circle(self.screen, BLACK, (wx, wy), 12, 2)
 
-        # mass label
         txt = self.font.render(f"{c.mass:.1f} kg", True, WHITE)
         self.screen.blit(txt, (rect.centerx - txt.get_width()//2, rect.centery - 12))
 
-    # ------------------------------------------------------------------
     def _draw_momentum(self, c1, c2):
         p1 = c1.mass * c1.velocity[0]
         p2 = c2.mass * c2.velocity[0]
@@ -59,7 +54,6 @@ class Renderer:
             surf = self.font.render(txt, True, col)
             self.screen.blit(surf, (15, 15 + i * (FONT_SIZE + 4)))
 
-    # ------------------------------------------------------------------
     def _draw_ui(self, coll_type):
         title = "Conservation of Momentum"
         subtitle = f"Collision: {'ELASTIC' if coll_type == 'elastic' else 'INELASTIC'}"

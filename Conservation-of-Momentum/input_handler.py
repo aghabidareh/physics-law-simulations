@@ -21,7 +21,6 @@ class InputHandler:
                 self.selected = None
 
             elif event.type == pygame.MOUSEMOTION and self.selected:
-                # drag → set velocity proportional to displacement
                 dx = event.rel[0]
                 self.selected.velocity[0] += dx * 0.2
 
@@ -30,7 +29,6 @@ class InputHandler:
 
         return True
 
-    # ------------------------------------------------------------------
     def _pick(self, pos):
         for c in (self.c1, self.c2):
             if abs(c.position[0] - pos[0]) <= c.radius and abs(c.position[1] - pos[1]) <= CART_HEIGHT/2:

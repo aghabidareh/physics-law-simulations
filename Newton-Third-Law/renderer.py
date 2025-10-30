@@ -13,7 +13,6 @@ class Renderer:
     def render(self, cart1, cart2):
         self.screen.fill((240, 250, 255))
 
-        # Ground
         ground_y = cart1.ground_y
         pygame.draw.rect(self.screen, (140, 90, 40), (0, ground_y, self.width, self.height - ground_y))
         pygame.draw.line(self.screen, (0, 0, 0), (0, ground_y), (self.width, ground_y), 3)
@@ -30,14 +29,12 @@ class Renderer:
         pygame.draw.rect(self.screen, cart.color, rect)
         pygame.draw.rect(self.screen, (0, 0, 0), rect, 3)
 
-        # Wheels
         for offset in [-25, 25]:
             wx = cart.position[0] + offset
             wy = cart.position[1] + 15
             pygame.draw.circle(self.screen, (40, 40, 40), (int(wx), int(wy)), 12)
             pygame.draw.circle(self.screen, (20, 20, 20), (int(wx), int(wy)), 12, 2)
 
-        # Mass label
         mass_text = self.font.render(f"{cart.mass:.1f}kg", True, (255, 255, 255))
         self.screen.blit(mass_text, (rect.centerx - 20, rect.centery - 15))
 
@@ -52,14 +49,12 @@ class Renderer:
             color = (255, 100, 100) if cart.force_during_collision > 0 else (100, 100, 255)
             pygame.draw.line(self.screen, color, start, end, 5)
 
-            # Arrowhead
             angle = np.arctan2(end[1] - start[1], end[0] - start[0])
             size = 18
             p1 = (end[0] - size * np.cos(angle - 0.5), end[1] - size * np.sin(angle - 0.5))
             p2 = (end[0] - size * np.cos(angle + 0.5), end[1] - size * np.sin(angle + 0.5))
             pygame.draw.polygon(self.screen, color, [end, p1, p2])
 
-        # Label action-reaction
         if cart1.get_force_arrow() and cart2.get_force_arrow():
             mid = ((cart1.position[0] + cart2.position[0]) / 2, cart1.position[1] - 80)
             text = self.font.render("ACTION = REACTION", True, (200, 0, 0))

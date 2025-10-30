@@ -17,7 +17,6 @@ class PhysicsBall:
         self.friction_enabled = False
 
     def update(self, dt):
-        # Apply friction
         if self.friction_enabled:
             self._apply_friction(dt)
 

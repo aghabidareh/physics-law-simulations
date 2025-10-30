@@ -15,7 +15,6 @@ class SimulationEngine:
         self.clock = pygame.time.Clock()
         self.running = True
 
-        # Create two carts
         self.cart1 = PhysicsCart(200, 3.0, (220, 50, 50), self.width, self.height)
         self.cart2 = PhysicsCart(600, 5.0, (50, 50, 220), self.width, self.height)
 

@@ -16,7 +16,6 @@ class SimulationEngine:
         self.clock = pygame.time.Clock()
         self.running = True
         
-        # Create thermal bodies
         self.body1 = ThermalBody(
             BODY1_X, BODY_Y, BODY_WIDTH, BODY_HEIGHT,
             TEMP_HOT_INITIAL, "Body 1", RED
@@ -26,7 +25,6 @@ class SimulationEngine:
             TEMP_COLD_INITIAL, "Body 2", BLUE
         )
         
-        # Create heat transfer system
         self.heat_system = HeatTransferSystem(
             self.body1, self.body2, THERMAL_CONDUCTIVITY
         )
@@ -46,10 +44,8 @@ class SimulationEngine:
     
     def _step(self):
         """Update physics simulation"""
-        # Update based on user input
         self.input_handler.update(self.dt)
         
-        # Update heat transfer
         self.heat_system.update(self.dt)
     
     def cleanup(self):

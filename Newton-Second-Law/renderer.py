@@ -13,7 +13,6 @@ class Renderer:
     def render(self, cart):
         self.screen.fill((240, 240, 255))  # Light sky
 
-        # Draw ground
         pygame.draw.rect(self.screen, (150, 100, 50), (0, cart.ground_y, self.width, self.height - cart.ground_y))
         pygame.draw.line(self.screen, (0, 0, 0), (0, cart.ground_y), (self.width, cart.ground_y), 2)
 
@@ -23,13 +22,11 @@ class Renderer:
         pygame.display.flip()
 
     def draw_cart(self, cart):
-        # Cart body
         rect = pygame.Rect(0, 0, cart.width_cart, cart.height_cart)
         rect.center = cart.position.astype(int)
         pygame.draw.rect(self.screen, cart.get_color(), rect)
         pygame.draw.rect(self.screen, (0, 0, 0), rect, 2)
 
-        # Wheels
         wheel_radius = 12
         wheel_positions = [
             (cart.position[0] - 25, cart.position[1] + 15),
@@ -49,7 +46,6 @@ class Renderer:
         color = (255, 50, 50) if cart.applied_force > 0 else (50, 50, 255)
         pygame.draw.line(self.screen, color, start, end, 4)
 
-        # Arrowhead
         angle = np.arctan2(end[1] - start[1], end[0] - start[0])
         arrow_size = 15
         p1 = end[0] - arrow_size * np.cos(angle - 0.5), end[1] - arrow_size * np.sin(angle - 0.5)

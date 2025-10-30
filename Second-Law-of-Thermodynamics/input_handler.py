@@ -24,19 +24,16 @@ class InputHandler:
         return True
     
     def _handle_keydown(self, key):
-        # Body 1 controls
         if key == pygame.K_w:  # Heat body 1
             self.heating_body1 = True
         elif key == pygame.K_s:  # Cool body 1
             self.cooling_body1 = True
         
-        # Body 2 controls
         elif key == pygame.K_UP:  # Heat body 2
             self.heating_body2 = True
         elif key == pygame.K_DOWN:  # Cool body 2
             self.cooling_body2 = True
         
-        # Other controls
         elif key == pygame.K_r:  # Reset
             self.system.reset()
         elif key == pygame.K_1:  # Preset: Hot-Cold
@@ -73,7 +70,6 @@ class InputHandler:
         """Apply continuous actions based on key states"""
         temp_change_rate = 20.0  # K/s
         
-        # Manual heating/cooling of body 1
         if self.heating_body1:
             new_temp = min(self.system.body1.T + temp_change_rate * dt, TEMP_MAX)
             self.system.body1.T = new_temp
@@ -83,7 +79,6 @@ class InputHandler:
             self.system.body1.T = new_temp
             self.system.body1.S = self.system.body1._calculate_entropy()
         
-        # Manual heating/cooling of body 2
         if self.heating_body2:
             new_temp = min(self.system.body2.T + temp_change_rate * dt, TEMP_MAX)
             self.system.body2.T = new_temp

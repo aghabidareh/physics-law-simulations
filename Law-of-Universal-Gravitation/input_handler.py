@@ -92,7 +92,6 @@ class InputHandler:
 
         return True
 
-    # ------------------------------------------------------------------
     def _create_default_scene(self):
         sun = Body(400, 300, mass=1e5, colour=SUN_COLOR, fixed=True)
         self.bodies.append(sun)

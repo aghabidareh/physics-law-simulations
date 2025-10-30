@@ -24,7 +24,6 @@ class SimulationEngine:
         self._create_default_scene()
         self.dt = 1.0 / FPS
 
-    # ------------------------------------------------------------------
     def _create_default_scene(self):
         self.bodies.clear()
         from physics_bodies import Body
@@ -43,7 +42,6 @@ class SimulationEngine:
             p.set_velocity(vx, vy)
             self.bodies.append(p)
 
-    # ------------------------------------------------------------------
     async def run(self):
         while self.running:
             self.running = self.input.process_events()
@@ -53,18 +51,14 @@ class SimulationEngine:
             self.clock.tick(FPS)
             await asyncio.sleep(0)
 
-    # ------------------------------------------------------------------
     def _physics_step(self):
         """
         Perform one physics timestep using semi-implicit Euler integration.
         O(n²) complexity for N-body gravitation.
         """
-        # 1. Reset forces on all bodies
         for body in self.bodies:
             body.reset_force()
 
-        # 2. Calculate gravitational forces between all pairs (N-body problem)
-        # This is O(n²) but optimal for small N (< 100 bodies)
         n = len(self.bodies)
         for i in range(n):
             for j in range(i + 1, n):
@@ -72,10 +66,8 @@ class SimulationEngine:
                 self.bodies[i].apply_force(force_on_i)
                 self.bodies[j].apply_force(force_on_j)
 
-        # 3. Update velocities and positions (semi-implicit Euler)
         for body in self.bodies:
             body.update(self.dt)
 
-    # ------------------------------------------------------------------
     def cleanup(self):
         pygame.quit()

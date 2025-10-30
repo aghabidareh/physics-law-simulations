@@ -16,7 +16,6 @@ class InputHandler:
             elif event.type == pygame.KEYUP:
                 self.handle_keyup(event.key)
 
-        # Continuous force application
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RIGHT]:
             self.cart.set_force(50)

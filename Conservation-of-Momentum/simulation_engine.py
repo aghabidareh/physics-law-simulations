@@ -13,7 +13,6 @@ class SimulationEngine:
         self.clock = pygame.time.Clock()
         self.running = True
 
-        # two carts
         self.c1 = Cart(200, 3.0, (220, 50, 50), SCREEN_WIDTH, SCREEN_HEIGHT)
         self.c2 = Cart(600, 5.0, (50, 50, 220), SCREEN_WIDTH, SCREEN_HEIGHT)
 
@@ -23,7 +22,6 @@ class SimulationEngine:
         self.dt = 1.0 / FPS
         self.collision_type = "elastic"          # or "inelastic"
 
-    # ------------------------------------------------------------------
     async def run(self):
         while self.running:
             self.running = self.input.process_events()
@@ -32,7 +30,6 @@ class SimulationEngine:
             self.clock.tick(FPS)
             await asyncio.sleep(0)
 
-    # ------------------------------------------------------------------
     def _step(self):
         self.c1.apply_friction(self.dt)
         self.c2.apply_friction(self.dt)
