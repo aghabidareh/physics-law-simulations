@@ -1,0 +1,2 @@
+from physics_magnetic import MagneticDipole, GaussianSurface, calculate_magnetic_field, calculate_flux
+from simulation_engine import SimulationEngine
